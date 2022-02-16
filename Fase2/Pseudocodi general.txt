@@ -1,0 +1,1848 @@
+tipus
+registre dadesjoc és
+    opcio: enter;
+    caselles: enter;
+    char matriujocaa[10][10];
+    char matriujocab[10][10];
+    char matriujocba[10][10];
+    char matriujocbb[10][10];
+    noacabata: enter;
+    noacabatb: enter;
+    puntuacioa: enter;
+    puntuaciob: enter;
+    llancamentsa: enter;
+    llancamentsb: enter;
+    tira: enter;
+    encertsa: enter;
+    encertsb: enter;
+    filaa: enter;
+    filab: enter;
+    columnaa: enter;
+    columnab: enter;
+    jugadaa: enter;
+    jugadab: enter;
+    orientacioa: enter;
+    orientaciob: enter;
+    verticala: enter;
+    verticalb: enter;
+    horitzontala: enter;
+    horitzontalb: enter;
+    monflag: enter;
+fregistre
+ftipus
+tipus
+registre records_tipus és
+nom[20]: caràcter;
+puntuacio: enter;
+fregistre
+ftipus
+acció VISUALITZASIMPLE(var matriujocaa[10][10]: taula de caràcter,caselles: enter)es
+    i, k: enter;
+    k:=0;
+    i:=0;
+    escriure("Matriu atac\n");
+    ecriureASCII(254);
+    mentre (i<caselles)
+        escriureASCII(i+65);
+        i++;
+    fmentre
+    i:=0;
+    escriure("\n");
+    mentre (i<caselles)
+        escriure("",i);
+        mentre(k<caselles)
+            escriure("",matriujocaa[i][k]);
+            k++;
+        fmentre
+        k:=0;
+        escriure("\n");
+        i++;
+    fmentre
+facció
+acció PAUSA és
+    escriure("\nPrem qualsevol tecla per continuar...\n");
+    Pausa
+facció
+acció INICIA_EL_MEU_TAULELL(var matriu[10][10]: taula de caràcters,var matriuk[10][10]: taula de caràcters, caselles: enter) és
+    comprova,control, vaixell, comptador, f, c, direccio, superior, dreta, inferior, esquerra, correcte, i, j: enter;
+    i:=0;
+    j:=0;
+    control:=0;
+    correcte:=0;
+    vaixell:=3;
+    direccio:=-1;
+    c:=-1;
+    f:=-1;
+    comptador:=0;
+    comprova:=0;
+    mentre (i<10) $Inicialitza la matriu amb punts
+        mentre (j<10)
+            matriu[i][j]:='.';
+            j++;
+	fmentre
+        j:=0;
+        i++;
+    fmentre
+    i:=0;
+    mentre (i<10) $Inicialitza la matriu amb ?
+        mentre (j<10)
+            matriuk[i][j]:='?';
+            j++;
+        fmentre
+        j:=0;
+        i++;
+    fmentre
+    i:=0;
+    mentre (vaixell<>-1)
+        i:=0;
+        j:=0;
+        mentre (correcte=0)
+            si ((correcte=0) i (control<>0))
+                escriure("\nEl vaixell a les coordenades que has introduit no s'ha pogut colocar...");
+                PAUSA();
+            fsi
+            NETEJAR_PANTALLA
+            VISUALITZASIMPLE(matriu, caselles);
+            escriure("\nEstem colocant un vaixell de '' caselles", vaixell+1);
+            mentre ((f<0) o (f>=caselles))
+                si (comprova>0)
+                    escriure("\nFila incorrecta gamarus!!!");
+                fsi
+                escriure("\nEn quina fila vols colocar el vaixell?: ");
+                llegirASCII(f);
+                f:=f-48;
+                comprova++;
+            fmentre
+            comprova:=0;
+            mentre ((c<0) o (c>=caselles))
+                si (comprova>0)
+                    escriure("\nColumna incorrecta cap de pardals!!!");
+                fsi
+                escriure("\nEn quina columna vols colocar el vaixell?: ");
+                llegirASCII(c);
+                si (c>=97)
+                    c:=c-32;
+                fsi
+                c:=c-65;
+                comprova++;
+            fmentre
+            comprova:=0;
+            si (vaixell<>0)
+                mentre ((direccio<>1) i (direccio<>0))
+                    si (comprova>0)
+                        escriure("\nDireccio incorrecta borinot!!!");
+                    fsi
+                    escriure("\nEn quina direccio vols colocar el vaixell?: (H/V)");
+                    llegirASCII(direccio);
+                    si (direccio>=97) direccio:=direccio-32;fsi
+                    si (direccio=72) direccio:=0;fsi
+                    si (direccio=86) direccio:=1;fsi
+                    comprova++;
+                fmentre
+            sino
+                direccio:=1; //valor arbitrari ja que en vaixells d'una sola casella no te importancia
+	    fsi
+            correcte:=1;
+            comprova:=0;
+            si ((((f+vaixell)>=caselles) i (direccio=1)) o (((c+vaixell)>=caselles) i (direccio=0)))
+                correcte:=0;
+            fsi
+            si (direccio=0)
+                superior:=f-1;si (superior=-1)superior++;fsi
+                inferior:=f+1; si (inferior=caselles)inferior--;fsi
+                esquerra:=c-1; si (esquerra=-1)esquerra++;fsi
+                dreta:=c+vaixell+1; si (dreta=caselles)dreta--;fsi
+            sino
+                superior:=f-1;si (superior=-1)superior++;fsi
+                inferior:=f+vaixell+1; si (inferior=caselles)inferior--;fsi
+                esquerra:=c-1; si (esquerra=-1)esquerra++;fsi
+                dreta:=c+1; si (dreta=caselles)dreta--;fsi
+            fsi
+            mentre (esquerra<=dreta)
+                mentre (superior<=inferior)
+                    si (matriu[superior][esquerra]<>'.') correcte:=0;fsi
+                    superior++;
+                    i++;
+                fmentre
+                superior:=superior-i;
+                i:=0;
+                esquerra++;
+            fmentre
+            control++;
+            si (correcte=0)
+                direccio:=-1;
+                c:=-1;
+                f:=-1;
+            fsi
+        fmentre
+        si (direccio=0)
+            mentre (j<=vaixell)
+                matriu[f][c+j]:='X';
+                j++;
+            fmentre
+        sino
+            mentre(j<=vaixell) 
+                matriu[f+j][c]:='X';
+                j++;
+            fmentre
+        fsi
+        comptador++;
+        si (comptador=(4-vaixell))
+            comptador:=0;
+            vaixell--;
+        fsi
+        control:=0;
+        correcte:=0;
+        direccio:=-1;
+        c:=-1;
+        f:=-1;
+    fmentre
+    escriure("\nJa has colocat tots els vaixells!! si fa patxoca... pero segur que perds :P");
+facció
+
+funció EMMAGATZEMA_JOC(var dades: tipus dadesjoc) retorna booleà és
+    f: fitxer;
+    n: enter;
+    n:=0;
+    f:=obrir("partida.bin","w");
+    si (f<>NULL)
+        n:=escriuref(f, dades);
+    fsi
+    tancar(f);
+retorna(n);
+ffunció
+funció RECUPERA_JOC(var dades: tipus dadesjoc) retorna booleà és
+    f: fitxer;
+    n: enter;
+    n:=0;
+    f:=obrir("partida.bin","r");
+    si (f<>NULL)
+        nllegirASCIIf(f, dades);
+        tancar(f);
+    fsi
+    retorna(n);
+ffunció
+funció CALCULAPUNTUACIO(caselles: enter, puntuacio: enter, llancaments: enter) retorna enter és
+    casellesf, puntuaciof, llancamentsf: real
+    casellesf:=caselles;
+    llancamentsf:=llancaments;
+    puntuaciof:=puntuacio100(casellesf/llancamentsf);
+    puntuacio:=puntuaciof;
+    retorna(puntuacio);
+ffunció
+funció EMMAGATZEMA_RECORDS(var records[10]: taula de records_tipus) retorna enter
+    n, i, j: enter
+    f: fitxer;
+    f:=obrir("records.txt","w");
+    i:=0;
+    j:=0;
+    si (f<>NULL)
+        n:=0;
+        mentre (i<>10)
+            mentre (j<>20)
+                escriuref(f,records[i].nom[j]);
+                j++;
+            fmentre
+            fescriure(f, '\t');
+            fescriure(f, records[i].puntuacio);
+            fescriure(f, '\n');
+            j:=0;
+            i++;
+        fmentre
+    sino
+        n:=-1;
+    fsi
+    fclose(f);
+    retorna(n);
+ffunció
+funció RECUPERA_RECORDS(var records[10]: taula de records_tipus) retorna enter és
+    i,k,n: enter;
+    lectura: caràcter;
+    i:=0;
+    k:=0;
+    f: fitxer;
+    f:=obrir("records.txt","r");
+    si (f=NULL)
+        n:=-1;
+    sino
+        mentre (nofinaldefitxer(f))
+            mentre (k<>21)
+                llegirf(f, "%c",  lectura);
+                si (lectura<>'\t') records[i].nom[k]:=lectura;fsi
+                k++;
+	    fmentre	
+            llegirf(f, "%i",  records[i].puntuacio);
+            llegirf(f, "%c",  lectura);
+            k:=0;
+            i++;
+        fmentre
+        tancar(f);
+    fsi
+    retorna(n);
+ffunció
+acció INICIALITZA_TAULA(var records[10]: taula de records_tipus) és
+i,k: enter;
+k:=0;
+mentre (k<=9)
+    records[k].puntuacio:=-666;
+    k++;
+fmentre
+k:=0;
+i:=0;
+mentre (i<=9)
+    mentre (k<20)
+        records[i].nom[k]:=' ';
+        k++;
+    fmentre
+k:=0;
+i++;
+fmentre
+facció
+acció IMPRIMIR_RECORDS(var records[10]: taula de records_tipus) és
+flag,i, k: enter;
+i:=0;
+k:=0;
+flag:=0;
+NETEJAR_PANTALLA
+mentre (i<=9)
+    si (records[i].puntuacio<>-666)
+        flag:=1;
+    fsi
+    i++;
+fmentre
+si (flag=1)
+    i:=0;
+    escriure ("Nom                 Puntuacio\n");
+mentre (i<=9)
+    si (records[i].puntuacio<>-666)
+        flag:=1;
+        mentre (k<>20)
+            escriure("%c",records[i].nom[k]);
+            k++;
+        fmentre
+        escriure ("%i", records[i].puntuacio);
+        escriure("\n");
+        k:=0;
+    fsi
+    i++;
+fmentre
+sino
+    escriure("El fitxer de records esta buit o no existeix, prova a afegir un record jugant.");
+fsi
+facció
+acció POSA_AIGUA(var atac[10][10]: taula de caràcters,f: enter,c: enter, caselles: enter) és
+    up, down, right, left, i: enter;
+    i:=0;
+    si (f-1>=0)
+        si (atac[f-1][c]='@')
+            si (f-2>=0)
+                si (atac[f-2][c]='@')
+                    si (f-3>=0)
+                        si (atac[f-3][c]='@')
+                            si (f-4>=0)
+                                up:=f-4;
+                            sino
+                                up:=f-3;
+                            fsi
+                        sino
+                            up:=f-3;
+			fsi
+                    sino
+                        up:=f-2;
+                    fsi
+                sino
+                    up:=f-2;
+                fsi
+            sino
+                up:=f-1;
+            fsi
+        sino
+            up:=f-1;
+        fsi
+    sino
+        up:=f;
+    fsi
+    si (c-1>=0)
+        si (atac[f][c-1]='@')
+            si (c-2>=0)
+                si (atac[f][c-2]='@')
+                    si (c-3>=0)
+                        si (atac[f][c-3]='@')
+                            si (c-4>=0)
+                                left:=c-4;
+                            sino
+                                left:=c-3;
+                            fsi
+                        sino
+                            left:=c-3;
+                        fsi
+                    sino
+                        left:=c-2;
+                    fsi
+                sino
+                    left:=c-2;
+                fsi
+            sino
+                left:=c-1;
+            fsi
+        sino
+            left:=c-1;
+        fsi
+    sino
+        left:=c;
+    fsi
+    si (c+1<caselles)
+        si (atac[f][c+1]='@')
+            si (c+2<caselles)
+                si (atac[f][c+2]='@')
+                    si (c+3<caselles)
+                        si (atac[f][c+3]='@')
+                            si (c+4<caselles)
+                                right:=c+4;
+                            sino
+                                right:=c+3;
+                            fsi
+                        sino
+                            right:=c+3;
+                        fsi
+                    sino
+                        right:=c+2;
+                    fsi
+                sino
+                    right:=c+2;
+                fsi
+            sino
+                right:=c+1;
+            fsi
+        sino
+            right:=c+1;
+        fsi
+    sino
+        right:=c;
+    fsi
+    si (f+1<caselles)
+        si (atac[f+1][c]='@')
+            si (f+2<caselles)
+                si (atac[f+2][c]='@')
+                    si (f+3<caselles)
+                        si (atac[f+3][c]='@')
+                            si (f+4<caselles)
+                                down:=f+4;
+                            fsi
+                            sino
+                                down:=f+3;
+                            fsi
+                        sino
+                            down:=f+3;
+                        fsi
+                    sino
+                        down:=f+2;
+                    fsi
+                sino
+                    down:=f+2;
+                fsi
+            sino
+                down:=f+1;
+            fsi
+        sino
+            down:=f+1;
+        fsi
+    sino
+        down:=f;
+    fsi
+     mentre (left<=right)
+                mentre (up<=down)
+                    si (atac[up][left]<>'@') atac[up][left]:='.';fsi
+                    up++;
+                    i++;
+                fmentre
+                up:=up-i;
+                i:=0;
+                left++;
+     fmentre
+acció
+funció AFEGIR_RECORD(puntuacio: enter,var records[10]: taula de records_tipus, jugador: enter)retorna booleà és
+record:records_tipus;
+opciorecord, lectura: caràcter;
+i,j,k: enter;
+flag: booleà;
+flag:=0;
+i:=0;
+j:=0;
+opciorecord:='k';
+lectura:='k';
+mentre (i<>10)
+    si (records[i].puntuacio<=puntuacio) flag:=1;fsi
+    i++;
+fmentre
+si (flag=1)
+    flag:=0;
+    mentre ((opciorecord<>'s') i (opciorecord<>'S') i (opciorecord<>'N') i (opciorecord<>'n'))
+        NETEJAR_PANTALLA
+        escriure("Jugador '', vols actualitzar els record? S/N ", jugador);
+        llegirASCII(opciorecord);
+    fmentre
+    si ((opciorecord='s') o (opciorecord='S'))
+        i:=0;
+        escriure("\nIntrodueix el nom del jugador '' (20 caracters com a maxim) i apreta intro: ", jugador);
+        mentre ((lectura<>'\r') i (i<20))
+            llegirASCII(lectura);
+            si (lectura<>'\r') record.nom[i]:=lectura;fsi
+            i++;
+        fmentre
+        i--;
+        mentre (i<>20)
+            record.nom[i]:=' ';
+            i++;
+        fmentre
+        NETEJAR_PANTALLA
+        record.puntuacio:=puntuacio;
+        i:=9;
+        k:=8;
+        mentre (i>=0)
+            si (((records[i-1].puntuacio>record.puntuacio)  i  (records[i].puntuacio<=record.puntuacio)) o ((records[i].puntuacio<=record.puntuacio) i (i=0)))
+                flag:=1;
+                mentre (k<>(i-1))
+                    records[k+1].puntuacio:=records[k].puntuacio;
+                    mentre (20<>j)
+                        records[k+1].nom[j]:=records[k].nom[j];
+                        j++;
+                    fmentre
+                k--;
+                j:=0;
+                fmentre
+                records[i].puntuacio:=record.puntuacio;
+                k:=0;
+                mentre (k<>20)
+                    records[i].nom[k]:=record.nom[k];
+                    k++;
+                fmentre
+            fsi
+            i--;
+        fmentre
+    fsi
+fsi
+retorna (flag);
+ffunció
+
+funció MONEDA()
+ retorna enter és  
+opcio: caràcter;
+flag,  opciok, guanya: enter;   
+flag:=0;
+
+mentre (flag=0)
+
+	
+escriure("Que vols ser? Cara o creu?  C/X ");
+	llegirASCII(
+opcio);
+	
+si((opcio='C')  o (opcio='X')  o (opcio='x')  o (opcio='c'))
+		
+
+si (opcio='c') opcio:='C';fsi
+		
+si(opcio='x') opcio:='X';fsi
+		
+flag:=true;
+
+	sino
+
+		NETEJARPANTALLA;
+	fsi
+fmentre
+
+escriure("\nApreta qualsevol tecla per a tirar la moneda: ");
+
+PAUSA;
+
+opciok:=ALEATORI%2;
+
+si (opciok=1)
+	
+
+escriure("C \n");
+	
+si (opcio='C')
+		
+
+escriure("\nComenca el jugador 1\n");
+		
+guanya:=1;
+
+	
+sino
+		
+
+escriure("\nComenca el jugador 2\n");
+
+		guanya:=0;
+
+	fsi
+
+sino
+
+
+	escriure("X\n");
+
+	si (opcio='X')
+		
+
+escriure("\nComenca el jugador 1\n");
+
+		guanya:=1;
+
+	
+sino
+		
+
+escriure("\nComenca el jugador 2\n");
+		
+guanya:=0;
+
+	fsi
+fsi
+
+si (guanya=0) guanya:=2;}
+PAUSA;
+NETEJAR_PANTALLA;
+retorna(guanya);
+
+ffunció
+funció COMPROVA(var defensa[10][10]: taula de caràcters, f:enter, c:enter,caselles:enter, var tirada:enter)retorna enter és
+jugada, up, down, left, right: enter;
+up:=0;
+down:=0;
+left:=0;
+right:=0;
+    si (f-1>=0)
+            si (defensa[f-1][c]='X')
+                jugada:=2;
+            fsi
+            si ((defensa[f-1][c]='.') o (defensa[f-1][c]='-'))
+                up:=1;
+            fsi
+            si (defensa[f-1][c]='@')
+                si (f-2>=0)
+                    si (defensa[f-2][c]='X')
+                        jugada:=2;
+                    fsi
+                    si ((defensa[f-2][c]='.') o (defensa[f-2][c]='-'))
+                        up:=1;
+                    fsi
+                    si (defensa[f-2][c]='@')
+                        si (f-3>=0)
+                            si (defensa[f-3][c]='X')
+                                jugada:=2;
+                            fsi
+                            si ((defensa[f-3][c]='.') o (defensa[f-3][c]='-'))
+                                up:=1;
+                            fsi
+                            si (defensa[f-3][c]='@') up:=1;}
+                        sino
+                            up:=1;
+                        fsi
+                    fsi
+                sino
+                    up:=1;
+                fsi
+        sino
+            up:=1;
+        fsi
+        si (f+1<caselles)
+            si (defensa[f+1][c]='X')
+                jugada:=2;
+            fsi
+            si ((defensa[f+1][c]='.') o (defensa[f+1][c]='-'))
+                down:=1;
+            fsi
+            si (defensa[f+1][c]='@')
+                si (f+2<caselles)
+                    si (defensa[f+2][c]='X')
+                        jugada:=2;
+                    fsi
+                    si ((defensa[f+2][c]='.') o (defensa[f+2][c]='-'))
+                        down:=1;
+                    fsi
+                    si (defensa[f+2][c]='@')
+                        si (f+3<caselles)
+                            si (defensa[f+3][c]='X')
+                                jugada:=2;
+                            fsi
+                            si ((defensa[f+3][c]='.') o (defensa[f+3][c]='-'))
+                                down:=1;
+                            fsi
+                            si (defensa[f+3][c]='@') down:=1;}
+                        sino
+                            down:=1;
+                        fsi
+                    fsi
+                sino
+                    down:=1;
+                fsi
+            fsi
+        sino
+            down:=1;
+        fsi
+        si (c-1>=0)
+            si (defensa[f][c-1]='X')
+                jugada:=2;
+            fsi
+            si ((defensa[f][c-1]='.') o (defensa[f][c-1]='-'))
+                left:=1;
+            fsi
+            si (defensa[f][c-1]='@')
+                si (c-2>=0)
+                    si (defensa[f][c-2]='X')
+                        jugada:=2;
+                    fsi
+                    si ((defensa[f][c-2]='.') o (defensa[f][c-2]='-'))
+                        left:=1;
+                    fsi
+                    si (defensa[f][c-2]='@')
+                        si (c-3>=0)
+                            si (defensa[f][c-3]='X')
+                                jugada:=2;
+                            fsi
+                            si ((defensa[f][c-3]='.') o (defensa[f][c-3]='-'))
+                                left:=1;
+                            fsi
+                            si (defensa[f][c-3]='@') left:=1;}
+                        sino
+                            left:=1;
+                        fsi
+                    fsi
+                sino
+                    left:=1;
+                fsi
+            fsi
+        sino
+            left:=1;
+        fsi
+        si (c+1<caselles)
+            si (defensa[f][c+1]='X')
+                jugada:=2;
+            fsi
+            si ((defensa[f][c+1]='.') o (defensa[f][c+1]='-'))
+                right:=1;
+            fsi
+            si (defensa[f][c+1]='@')
+                si (c+2<caselles)
+                    si (defensa[f][c+2]='X')
+                        jugada:=2;
+                    fsi
+                    si ((defensa[f][c+2]='.') o (defensa[f][c+2]='-'))
+                        right:=1;
+                    fsi
+                    si (defensa[f][c+2]='@')
+                        si (c+3<caselles)
+                            si (defensa[f][c+3]='X')
+                                jugada:=2;
+                            fsi
+                            si ((defensa[f][c+3]='.') o (defensa[f][c+3]='-'))
+                                right:=1;
+                            fsi
+                            si (defensa[f][c+3]='@') right:=1;}
+                        sino
+                            right:=1;
+                        fsi
+                    fsi
+                sino
+                    right:=1;
+                fsi
+            fsi
+        sino
+            right:=1;
+        fsi
+        si ((up=1) i (down=1) i (left=1) i (right=1)) jugada:=3;fsi
+        tirada:=1;
+    retorna(jugada);
+ffunció
+
+acció RANDOMIZE(var fila: enter, var columna: enter, var direccio: enter, caselles: enter) és
+    fila:=ALEATORI%(caselles);
+    columna:=ALEATORI%(caselles);
+    direccio:=ALEATORI%2; $0 serà vertical i 1 serà horitzontal
+facció
+
+funció TIPUS_JOC(var caselles: enter) retorna enter és
+    opcio: enter;
+    opcio:=0;
+    caselles:=0;
+    mentre ((caselles>10) o (caselles<8))
+                escriure("De cuantes caselles vols que sigui el tauler? min 8 max 10: ");
+                llegirASCII(caselles);
+                caselles:=caselles-48;
+                si (caselles=1)
+     
+           
+     	mentre (caselles<>0)
+                    
+                        
+				llegirASCII(caselles);
+                        	caselles:=caselles-48;
+ 
+			fmentre
+                	escriure("0");
+			caselles:=10;
+               
+		fsi
+    NETEJAR_PANTALLA
+    fmentre
+    mentre ((opcio<1) o (opcio>3))
+    	NETEJAR_PANTALLA
+        escriure("A quina modalitat de joc vols jugar?\n");
+        escriure("1.-Cap jugador\n");
+        escriure("2.-Un jugador\n");
+        escriure("3.-Dos jugadors\n");
+        llegirASCII(opcio);
+        opcio:=opcio-48;
+        NETEJAR_PANTALLA
+    fmentre
+retorna(opcio);
+ffunció
+
+acció INICIA_TAULELL(var matriu[10][10]: matriu de caràcters,var matriuk[10][10]: matriu de caràcters, caselles: enter) és
+    control, vaixell, comptador, f, c, direccio, superior, dreta, inferior, esquerra, correcte, i, j: enter;
+repeteix:
+    i:=0;
+    j:=0;
+    control:=0;
+    correcte:=0;
+    vaixell:=3;
+    comptador:=0;
+    mentre (i<10) $Inicialitza la matriu amb punts
+        mentre (j<10)
+            matriu[i][j]:='.';
+            j++;
+        fmentre
+        j:=0;
+        i++;
+    fmentre
+    i:=0;
+    mentre (i<10) $Inicialitza la matriu amb ?
+        mentre (j<10)
+            matriuk[i][j]:='?';
+            j++;
+        fmentre
+        j:=0;
+        i++;
+    fmentre
+    i:=0;
+    mentre (vaixell<>-1)
+        i:=0;
+        j:=0;
+        mentre (correcte=0)
+            correcte:=1;
+            RANDOMIZE(f,c, direccio, caselles);
+            si ((((f+vaixell)>=caselles) i (direccio=1)) o (((c+vaixell)>=caselles) i (direccio=0)))
+                correcte:=0;
+            fsi
+            si (direccio=0)
+                superior:=f-1;si (superior=-1)superior++;}
+                inferior:=f+1; si (inferior=caselles)inferior--;}
+                esquerra:=c-1; si (esquerra=-1)esquerra++;}
+                dreta:=c+vaixell+1; si (dreta=caselles)dreta--;}
+            sino
+                superior:=f-1;si (superior=-1)superior++;}
+                inferior:=f+vaixell+1; si (inferior=caselles)inferior--;}
+                esquerra:=c-1; si (esquerra=-1)esquerra++;}
+                dreta:=c+1; si (dreta=caselles)dreta--;}
+            fsi
+            mentre (esquerra<=dreta)
+                mentre (superior<=inferior)
+                    si (matriu[superior][esquerra]<>'.') correcte:=0;fsi
+                    superior++;
+                    i++;
+                fmentre
+                superior:=superior-i;
+                i:=0;
+                esquerra++;
+            fmentre
+            control++;
+            si (control>=2000)
+                goto repeteix;
+            fsi
+        fmentre
+        correcte:=0;
+        si (direccio=0)
+            mentre (j<=vaixell)
+                matriu[f][c+j]:='X';
+                j++;
+            fmentre
+        sino
+            mentre(j<=vaixell)
+                matriu[f+j][c]:='X';
+                j++;
+            fmentre
+        fsi
+        comptador++;
+        si (comptador=(4-vaixell))
+            comptador:=0;
+            vaixell--;
+        fsi
+    fmentre
+facció
+
+funció MOSTRAR_MENU(load: enter) retorna enter és
+    menu: enter;
+    menu:=0;
+        mentre ((menu>7) o  (menu<1)  o  (menu=3  i  load=0)  o  (menu=4  i  load=0)  o  (menu=0))
+            escriure("\nMenu:\n");
+            escriure("1.- Crear un nou joc\n");
+            escriure("2.- Carregar un joc emmagatzemat\n");
+            si (load=1)
+                escriure("3.- Jugar partida\n");
+                escriure("4.- Emmagatzemar el joc\n");
+            fsi
+            escriure("5.- Veure podium\n");
+            escriure("6.- Sortir del joc\n");
+            escriure("7.- Instruccions\n\n");
+            escriure("Selecciona la opcio i prem intro\n\n");
+            menullegirASCII();
+            menu:=menu-48;
+            NETEJAR_PANTALLA
+	fmentre
+        retorna(menu);
+ffunció
+
+acció VISUALITZA(var matriudefensa[10][10]: taula de caràcters,var matriuatac[10][10]: taula de caràcters,caselles: enter, jugador: enter) és
+    i, k: enter;
+    k:=0;
+    i:=0;
+    escriure("Jugador ''\nMatriu atac                ",jugador);
+    si (caselles=9)
+        escriure(" ");
+    fsi
+    si (caselles=10)
+        escriure("  ");
+    fsi
+    escriure("Matriu defensa\n");
+    escriureASCII(254);
+    mentre (i<caselles)
+        escriureASCII(i+65);
+        i++;
+    fmentre
+    escriure("                  ");
+    i:=0;
+    escriureASCII(254);
+    mentre (i<caselles)
+        escriureASCII(i+65);
+        i++;
+    fmentre
+    i:=0;
+    escriure("\n");
+    mentre (i<caselles)
+        escriure("%i",i);
+        mentre(k<caselles)
+            escriure("%c",matriuatac[i][k]);
+            k++;
+        fmentre
+        k:=0;
+        escriure("                  ");
+        escriure("%i",i);
+        mentre(k<caselles)
+            escriure("%c",matriudefensa[i][k]);
+            k++;
+        fmentre
+        k:=0;
+        escriure("\n");
+        i++;
+    fmentre
+facció
+
+funció DISPARA(var defensa[10][10]: taula de caràcters, var atac[10][10]: taula de caràcters, f: enter, c: enter, jugada:enter, caselles:enter, orientacio:enter, vertical:enter, horitzontal:enter, noacabat:enter) retorna enter és
+tirada, fila, columna, correcte:enter;
+correcte:=0;
+tirada:=0;
+mentre (tirada=0)
+si ((jugada=1) i (noacabat=0))
+    mentre (correcte=0)
+        f:=ALEATORI%(caselles);
+        c:=ALEATORI%(caselles);
+        si (atac[f][c]='?') correcte:=1;}
+    fmentre
+    si (defensa[f][c]='X')
+        defensa[f][c]:='@';
+        atac[f][c]:='@';
+        fila:=f;
+        columna:=c;
+        jugada:=COMPROVA(defensa, fila, columna, caselles,  tirada);
+    fsi
+    si (defensa[f][c]='.')
+        defensa[f][c]:='-';
+        atac[f][c]:='.';
+        jugada:=1;
+    fsi
+    tirada:=1;
+fsi
+si (((jugada=2) o (noacabat=1)) i (tirada=0))
+    si (orientacio=-1)
+        orientacio:=ALEATORI%2;
+    fsi
+    si (orientacio=0)
+        si (horitzontal=-1)
+            horitzontal:=ALEATORI%2;
+        fsi
+        si (horitzontal=0)
+            si (c-1>=0)
+                si (atac[f][c-1]='?')
+                    si ((defensa[f][c-1]='X') i (tirada=0))
+                        defensa[f][c-1]:='@';
+                        atac[f][c-1]:='@';
+                        c:=c-1;
+                        fila:=f;
+                        columna:=c;
+                        jugada:=COMPROVA(defensa, fila, columna, caselles, tirada);
+                        orientacio:=0;
+                        si (jugada=3)
+                            orientacio:=-1;
+                            horitzontal:=-1;
+                        fsi
+                        tirada:=1;
+                    fsi
+                    si ((defensa[f][c-1]='.') i (tirada=0))
+                        defensa[f][c-1]:='-';
+                        atac[f][c-1]:='.';
+                        horitzontal:=1;
+                        jugada:=1;
+                        tirada:=1;
+                        si (c+1<caselles)
+                            si ((atac[f][c-1]='.') i (atac[f][c+1]='.'))
+                                orientacio:=1;
+                                horitzontal:=-1;
+                            fsi
+                        sino
+                            orientacio:=1;
+                            horitzontal:=-1;
+                        fsi
+                    fsi
+                fsi
+                si ((atac[f][c-1]='@') i (tirada=0))
+                    c:=c-1;
+                    orientacio:=0;
+                fsi
+                si ((atac[f][c-1]='.') i (tirada=0))
+                    horitzontal:=1;
+                    si ((atac[f][c-1]='.') i (atac[f][c+1]='.'))
+                        orientacio:=1;
+                        horitzontal:=-1;
+                    fsi
+                fsi
+            sino
+                horitzontal:=1;
+                si (atac[f][c+1]='.')
+                    orientacio:=1;
+                    horitzontal:=-1;
+                fsi
+            fsi
+        sino $horitzontal:=1
+        si (c+1<caselles)
+                si (atac[f][c+1]='?')
+                    si ((defensa[f][c+1]='X') i (tirada=0))
+                        defensa[f][c+1]:='@';
+                        atac[f][c+1]:='@';
+                        c:=c+1;
+                        fila:=f;
+                        columna:=c;
+                        jugada:=COMPROVA(defensa, fila, columna, caselles, tirada);
+                        orientacio:=0;
+                        tirada:=1;
+                        si (jugada=3)
+                            orientacio:=-1;
+                            horitzontal:=-1;
+                        fsi
+                    fsi
+                    si ((defensa[f][c+1]='.') i (tirada=0))
+                        defensa[f][c+1]:='-';
+                        atac[f][c+1]:='.';
+                        horitzontal:=0;
+                        jugada:=1;
+                        tirada:=1;
+                        si (c-1>=0)
+                            si ((atac[f][c-1]='.') i (atac[f][c+1]='.'))
+                                orientacio:=1;
+                                horitzontal:=-1;
+                            fsi
+                        sino
+                            orientacio:=1;
+                            horitzontal:=-1;
+                        fsi
+                    fsi
+                fsi
+                si ((atac[f][c+1]='@') i (tirada=0))
+                    c:=c+1;
+                    orientacio:=0;
+                fsi
+                si ((atac[f][c+1]='.') i (tirada=0))
+                    horitzontal:=0;
+                    si ((atac[f][c+1]='.') i (atac[f][c-1]='.'))
+                        orientacio:=1;
+                        horitzontal:=-1;
+                    fsi
+                fsi
+            sino
+                horitzontal:=0;
+                si (atac[f][c-1]='.')
+                    orientacio:=1;
+                    horitzontal:=-1;
+                fsi
+            fsi
+        fsi
+    sino $orientacio:=1 vertical per tant
+        si (vertical=-1)
+            vertical:=ALEATORI%2;
+        fsi
+        si (vertical=0) //apuntant capa dalt
+            si (f-1>=0)
+                si (atac[f-1][c]='?')
+                    si ((defensa[f-1][c]='X') i (tirada=0))
+                        defensa[f-1][c]:='@';
+                        atac[f-1][c]:='@';
+                        f:=f-1;
+                        fila:=f;
+                        columna:=c;
+                        jugada:=COMPROVA(defensa, fila, columna, caselles, tirada);
+                        orientacio:=1;
+                        tirada:=1;
+                        si (jugada=3)
+                            orientacio:=-1;
+                            vertical:=-1;
+                        fsi
+                    fsi
+                    si ((defensa[f-1][c]='.') i (tirada=0))
+                        defensa[f-1][c]:='-';
+                        atac[f-1][c]:='.';
+                        vertical:=1;
+                        jugada:=1;
+                        tirada:=1;
+                        si ((atac[f-1][c]='.') i (atac[f+1][c]='.'))
+                            orientacio:=0;
+                            vertical:=-1;
+                        fsi
+                    fsi
+                fsi
+                si ((atac[f-1][c]='@') i (tirada=0))
+                    f:=f-1;
+                    orientacio:=1;
+                fsi
+                si ((atac[f-1][c]='.') i (tirada=0))
+                    vertical:=1;
+                    si (f+1<caselles)
+                        si ((atac[f-1][c]='.') i (atac[f+1][c]='.'))
+                            orientacio:=0;
+                            vertical:=-1;
+                        fsi
+                    sino
+                        vertical:=-1;
+                        orientacio:=0;
+                    fsi
+                fsi
+            sino
+                vertical:=1;
+                si (atac[f+1][c]='.')
+                    orientacio:=0;
+                    vertical:=-1;
+                fsi
+            fsi
+        sino $vertical:=1
+        si (f+1<caselles)
+                si (atac[f+1][c]='?')
+                    si ((defensa[f+1][c]='X') i (tirada=0))
+                        defensa[f+1][c]:='@';
+                        atac[f+1][c]:='@';
+                        f:=f+1;
+                        fila:=f;
+                        columna:=c;
+                        jugada:=COMPROVA(defensa, fila, columna, caselles, tirada);
+                        orientacio:=1;
+                        tirada:=1;
+                        si (jugada=3)
+                            orientacio:=-1;
+                            vertical:=-1;
+                        fsi
+                    fsi
+                    si ((defensa[f+1][c]='.') i (tirada=0))
+                        defensa[f+1][c]:='-';
+                        atac[f+1][c]:='.';
+                        vertical:=0;
+                        jugada:=1;
+                        tirada:=1;
+                        si (f-1>=0)
+                            si ((atac[f-1][c]='.') i (atac[f+1][c]='.'))
+                                orientacio:=0;
+                                vertical:=-1;
+                            fsi
+                        sino
+                            orientacio:=0;
+                            vertical:=-1;
+                        fsi
+                    fsi
+                fsi
+                si ((atac[f+1][c]='@') i (tirada=0))
+                    f:=f+1;
+                    orientacio:=1;
+                fsi
+                si ((atac[f+1][c]='.') i (tirada=0))
+                    vertical:=0;
+                    si (atac[f-1][c]='.')
+                        orientacio:=0;
+                        vertical:=-1;
+                    fsi
+                fsi
+            sino
+                vertical:=0;
+                si (atac[f-1][c]='.')
+                    orientacio:=0;
+                    vertical:=-1;
+                fsi
+            fsi
+        fsi
+    fsi
+fsi
+si ((jugada=3) i (tirada=0))
+	jugada:=1;
+	noacabat:=0;
+	tirada:=0;
+fsi
+fmentre
+retorna (jugada);
+ffunció
+
+int main()
+    matriujocaa[10][10]: taula de caràcter;
+    matriujocab[10][10]: taula de caràcter;
+    matriujocba[10][10]: taula de caràcter;
+    matriujocbb[10][10]: taula de caràcter;
+    escapadatime: caràcter;
+    taula[10]: records_tipus;
+    i,j,monflag, opciotauler, noacabata, noacabatb, puntuacioa, puntuaciob,llancamentsa, llancamentsb, tira, encertsa, encertsb, filaa, filab, columnaa, columnab, jugadaa, fi, jugadab, opcio, caselles, load, menu, orientacioa, orientaciob, verticala, verticalb, horitzontala, horitzontalb: enter;
+    fi:=0;
+    load:=0;
+    opciotauler:=-1;
+    dadesjoc dades;
+    noacabata:=0;
+    noacabatb:=0;
+    encertsa:=0;
+    encertsb:=0;
+    jugadaa:=1;
+    jugadab:=1;
+    orientacioa:=-1;
+    orientaciob:=-1;
+    horitzontala:=-1;
+    horitzontalb:=-1;
+    verticala:=-1;
+    verticalb:=-1;
+    puntuacioa:=0;
+    puntuaciob:=0;
+    llancamentsa:=0;
+    llancamentsb:=0;
+    monflag:=1;
+    INICIALITZA_TAULA(taula);
+    RECUPERA_RECORDS(taula);
+    mentre (1<>0)
+    menu:
+    menu:=MOSTRAR_MENU(load);
+    opció (menu)
+        valor 1:
+            opcio:=TIPUS_JOC(caselles);
+            opció(opcio)
+                valor 1:
+                    INICIA_TAULELL(matriujocaa, matriujocab, caselles);
+                    INICIA_TAULELL(matriujocbb, matriujocba, caselles);
+                    load:=1;
+                valor 2:
+                    INICIA_TAULELL(matriujocaa, matriujocab, caselles);
+                    INICIA_TAULELL(matriujocbb, matriujocba, caselles);
+                    load:=1;
+ 
+                valor 3:
+                    mentre ((opciotauler<>78) i (opciotauler<>83))
+                        escriure("\nJugador 1: Vols colocar els teus propis vaixells? (S/N)");
+                        opciotaulerllegirASCII();
+                        si (opciotauler>=97)
+                            opciotauler:=opciotauler-32;
+                        fsi
+                    fmentre
+                    si (opciotauler=78)
+                        INICIA_TAULELL(matriujocaa, matriujocab, caselles);
+                        INICIA_TAULELL(matriujocbb, matriujocba, caselles);
+                    sino
+                        INICIA_EL_MEU_TAULELL(matriujocaa, matriujocab, caselles);
+                        INICIA_TAULELL(matriujocbb, matriujocba, caselles);
+                    fsi
+                    load:=1;
+            fopcio
+        valor 2:
+            si (0=RECUPERA_JOC( dades))
+            escriure("No s'ha carregat cap joc...");
+        sino
+            escriure("El teu  joc s'ha carregat correctament");
+        monflag:=0;
+        opcio:=dades.opcio;
+        caselles:=dades.caselles;
+        i:=0;
+        j:=0;
+        mentre (i<10)
+            mentre (j<10)
+                matriujocaa[i][j]:=dades.matriujocaa[i][j];
+                j++;
+            fmentre
+            j:=0;
+            i++;
+        fmentre
+        i:=0;
+        mentre (i<10)
+            mentre (j<10)
+                matriujocab[i][j]:=dades.matriujocab[i][j];
+                j++;
+            fmentre
+            j:=0;
+            i++;
+        fmentre
+        i:=0;
+        mentre (i<10)
+            mentre (j<10)
+                matriujocbb[i][j]:=dades.matriujocbb[i][j];
+                j++;
+            fmentre
+            j:=0;
+            i++;
+        fmentre
+        i:=0;
+        mentre (i<10)
+            mentre (j<10)
+                matriujocba[i][j]:=dades.matriujocba[i][j];
+                j++;
+            fmentre
+            j:=0;
+            i++;
+        fmentre
+        noacabata:=dades.noacabata;
+        noacabatb:=dades.noacabatb;
+        puntuacioa:=dades.puntuacioa;
+        puntuaciob:=dades.puntuaciob;
+        llancamentsa:=dades.llancamentsa;
+        llancamentsb:=dades.llancamentsb;
+        tira:=dades.tira;
+        encertsa:=dades.encertsa;
+        encertsb:=dades.encertsb;
+        filaa:=dades.filaa;
+        filab:=dades.filab;
+        columnaa:=dades.columnaa;
+        columnab:=dades.columnab;
+        jugadaa:=dades.jugadaa;
+        jugadab:=dades.jugadab;
+        orientacioa:=dades.orientacioa;
+        orientaciob:=dades.orientaciob;
+        verticala:=dades.verticala;
+        verticalb:=dades.verticalb;
+        horitzontala:=dades.horitzontala;
+        horitzontalb:=dades.horitzontalb;
+        monflag:=dades.monflag;
+            load:=true;
+            menu:=0;
+        escriure("\nLa partida es de %i jugadors", opcio-1);
+        escriure("\nI el tauler es de %i caselles", caselles);
+        fsi
+        valor 3:
+            opció(opcio)
+            valor  1:
+                si (monflag=1)
+                    tira:=MONEDA();
+                    monflag:=0;
+                fsi
+            mentre (fi=0)
+                        mentre (((jugadaa=2  o  jugadaa=3)  o  tira=1) i (fi=0))
+                            jugadaa:=DISPARA(matriujocbb, matriujocab, filaa, columnaa, jugadaa, caselles, orientacioa, verticala, horitzontala, noacabata);
+                            si (jugadaa=3)
+                                POSA_AIGUA(matriujocab, filaa, columnaa, caselles);
+                            fsi
+                            puntuacioa:=puntuacioa+jugadaa-1;
+                            llancamentsa++;
+                            NETEJAR_PANTALLA
+                            VISUALITZA(matriujocaa, matriujocab, caselles, 1);
+                            VISUALITZA(matriujocbb, matriujocba, caselles, 2);
+                            escriure("\nTorn del jugador 1:");
+                            escriure("\n\nResultat: Jugador 1 casella '''':", filaa, columnaa+65);
+                            opció(jugadaa)
+                            valor  1:
+                                escriure(" Aigua.");
+                                tira:=2;
+                             
+                            valor  2:
+                                escriure(" Tocat.");
+                                encertsa++;
+                                si (encertsa<>20)
+                                    escriure(" Torna a tirar.");
+                                fsi
+                                noacabata:=1;
+                                tira:=1;
+                            valor  3:
+                                escriure(" Tocat i enfonsat. ");
+                                encertsa++;
+                                si (encertsa<>20)
+                                    escriure("Torna a tirar.");
+                                fsi
+                                noacabata:=0;
+                                tira:=1;
+			    fopcio
+                            llegeixASCII(escapadatime);
+                            si (escapadatime='\t')
+                                NETEJAR_PANTALLA
+                                goto menu;
+                            fsi
+                            si (encertsa=20)
+                                fi:=1;
+                            fsi
+                        fmentre
+                        mentre (((jugadab=2) o (jugadab=3) o (tira=2)) i (fi=0))
+                            jugadab:=DISPARA(matriujocaa, matriujocba, filab, columnab, jugadab, caselles,  orientaciob,  verticalb,  horitzontalb, noacabatb);
+                            si (jugadab=3)
+                                  POSA_AIGUA(matriujocba, filab, columnab, caselles);
+                            fsi
+                            llancamentsb++;
+                            NETEJAR_PANTALLA
+                            VISUALITZA(matriujocaa, matriujocab, caselles, 1);
+                            VISUALITZA(matriujocbb, matriujocba, caselles, 2);
+                            puntuaciob:=puntuaciob+jugadab-1;
+                            escriure("\nTorn del jugador 2:");
+                            escriure("\n\nResultat: Jugador 2 casella '''':", filab, columnab+65);
+                            opció(jugadab)
+                            valor  1:
+                                escriure(" Aigua.");
+                                tira:=1;
+                            valor  2:
+                                escriure(" Tocat. ");
+                                encertsb++;
+                                si (encertsb<>20)
+                                    escriure("Torna a tirar.");
+                                fsi
+                                noacabatb:=1;
+                                tira:=2;
+                            valor  3:
+                                escriure(" Tocat i enfonsat. ");
+                                encertsb++;
+                                si (encertsb<>20)
+                                    escriure("Torna a tirar.");
+                                fsi
+                                noacabatb:=0;
+                                tira:=2;
+                             fopcio
+                        llegeixASCII(escapadatime);
+                            si (escapadatime='\t')
+                                NETEJAR_PANTALLA
+                                goto menu;
+                            fsi
+                        si (encertsb=20)
+                                fi:=1;
+                            fsi
+                        fmentre
+                    fmentre
+                    puntuacioa:=CALCULAPUNTUACIO(caselles, puntuacioa, llancamentsa);
+                    puntuaciob:=CALCULAPUNTUACIO(caselles, puntuaciob, llancamentsb);
+                    si (encertsa=20)
+                        escriure("\nHa guanyat el jugador 1, amb %i punts, felicitats!\n", puntuacioa);
+                    fsi
+                    si (encertsb=20)
+                        escriure("\nHa guanyat el jugador 2, amb %i punts, felicitats!\n", puntuaciob);
+                    fsi
+                    PAUSA;
+                    si (0=AFEGIR_RECORD(puntuacioa, taula, 1)) escriure("El teu record no s'ha afegit...\n");fsi
+                    si (0=AFEGIR_RECORD(puntuaciob, taula, 2)) escriure("El teu record no s'ha afegit...\n");fsi
+                    EMMAGATZEMA_RECORDS(taula);
+                    IMPRIMIR_RECORDS(taula);
+                    fi:=0;
+                    noacabata:=0;
+                    noacabatb:=0;
+                    encertsa:=0;
+                    encertsb:=0;
+                    jugadaa:=1;
+                    jugadab:=1;
+                    orientacioa:=-1;
+                    orientaciob:=-1;
+                    horitzontala:=-1;
+                    horitzontalb:=-1;
+                    verticala:=-1;
+                    verticalb:=-1;
+                    puntuacioa:=0;
+                    puntuaciob:=0;
+                    llancamentsa:=0;
+                    llancamentsb:=0;
+                    load:=0;
+                    monflag:=1;
+                    PAUSA;
+                valor  2:
+                    mentre (fi=0)
+                        filaa:=-1;
+                        columnaa:=-1;
+                        VISUALITZASIMPLE(matriujocab, caselles);
+                        escriure("\nTorn del jugador 1:");
+                        mentre ((filaa<0) o (filaa>=caselles))
+                            escriure("\nIntrodueix la fila per a disparar: ");
+                            filaallegirASCII();
+                            filaa:=filaa-48;
+                            si ((filaa<0) o (filaa>=caselles))
+                                escriure("\nFila incorrecta! tu creus que en aqueta fila pots llancar una bomba?");
+                            fsi
+                        fmentre
+                        mentre ((columnaa<0) o (columnaa>=caselles))
+                            escriure("\nIntrodueix la columna per a disparar: ");
+                            columnaallegirASCII();
+                            si (columnaa>=97)
+                                columnaa:=columnaa-32;
+                            fsi
+                            columnaa:=columnaa-65;
+                            si ((columnaa<0) o (columnaa>=caselles))
+                                escriure("\nColumna incorrecta tros d'ase!");
+                            fsi
+                        fmentre
+                        llancamentsa++;
+                        si (matriujocab[filaa][columnaa]='?')
+                            si (matriujocbb[filaa][columnaa]='.')
+                                matriujocbb[filaa][columnaa]:='-';
+                                matriujocab[filaa][columnaa]:='.';
+                                jugadaa:=1;
+                            fsi
+                            si (matriujocbb[filaa][columnaa]='X')
+                                matriujocbb[filaa][columnaa]:='@';
+                                matriujocab[filaa][columnaa]:='@';
+                                encertsa++;
+                                jugadaa:=COMPROVA(matriujocbb, filaa, columnaa,caselles,  tira);
+                                si (jugadaa=3)
+                                    POSA_AIGUA(matriujocab, filaa, columnaa, caselles);
+                                fsi
+                            fsi
+                        sino
+                            jugadaa:=0;
+                        fsi
+                        puntuacioa:=puntuacioa+jugadaa-1;
+                        escriure("\nResultat: Jugador 1 casella '''':", filaa, columnaa+65);
+                        opció(jugadaa)
+                        valor  0:
+                            escriure(" Casella repetida. ");
+                        valor  1:
+                            escriure(" Aigua. ");
+                        valor  2:
+                            escriure(" Tocat. ");
+                        valor  3:
+                            escriure(" Tocat i enfonsat. ");
+			fopcio
+                        si (encertsa=20)
+                            fi:=1;
+                        sino
+                                escriure("Torna a tirar.");
+                        fsi
+                        llegirASCII(escapadatime);
+                            si (escapadatime='\t')
+                                NETEJAR_PANTALLA;
+                                goto menu;
+                            fsi
+                        NETEJAR_PANTALLA;
+                    fmentre
+                    puntuacioa:=CALCULAPUNTUACIO(caselles, puntuacioa, llancamentsa);
+                    si (encertsa=20)
+                        escriure("\nHa guanyat el jugador 1, amb '' punts, felicitats!\n", puntuacioa);
+                    fsi
+                    PAUSA;
+                    si (0=AFEGIR_RECORD(puntuacioa, taula, 1)) escriure("El teu record no s'ha afegit...\n");}
+                    EMMAGATZEMA_RECORDS(taula);
+                    IMPRIMIR_RECORDS(taula);
+                    fi:=0;
+                    noacabata:=0;
+                    encertsa:=0;
+                    jugadaa:=1;
+                    orientacioa:=-1;
+                    horitzontala:=-1;
+                    verticala:=-1;
+                    puntuacioa:=0;
+                    llancamentsa:=0;
+                    load:=0;
+                    PAUSA;
+                valor  3:
+                    si (monflag=1)
+                    tira:=MONEDA();
+                    monflag:=0;
+                    fsi
+                mentre (fi=0)
+                    mentre (((jugadaa=2  o  jugadaa=3)  o  tira=1) i (fi=0))
+                        NETEJAR_PANTALLA
+                        filaa:=-1;
+                        columnaa:=-1;
+                        VISUALITZA(matriujocaa, matriujocab, caselles, 1);
+                        mentre ((filaa<0) o (filaa>=caselles))
+                            escriure("\nTorn del jugador 1");
+                            escriure("\nIntrodueix la fila per a disparar: ");
+                            llegirASCII(filaa);
+                            filaa:=filaa-48;
+                            si ((filaa<0) o (filaa>=caselles))
+                                escriure("\nHas introduit una fila incorrecta empanat!!");
+                            fsi
+                        fmentre
+                        mentre ((columnaa<0) o (columnaa>=caselles))
+                            escriure("\nIntrodueix la columna per a disparar: ");
+                            llegirASCII(columnaa);
+                            si (columnaa>=97)
+                                columnaa:=columnaa-32;
+                            fsi
+                            columnaa:=columnaa-65;
+                            si ((columnaa<0) o (columnaa>=caselles))
+                                escriure("\nPero que no veus que el que acabes de posar esta malament? torna-hi...");
+                            fsi
+                        fmentre
+                        llancamentsa++;
+                        si (matriujocab[filaa][columnaa]='?')
+                            si (matriujocbb[filaa][columnaa]='.')
+                                matriujocbb[filaa][columnaa]:='-';
+                                matriujocab[filaa][columnaa]:='.';
+                                jugadaa:=1;
+                                tira:=2;
+                            fsi
+                            si (matriujocbb[filaa][columnaa]='X')
+                                matriujocbb[filaa][columnaa]:='@';
+                                matriujocab[filaa][columnaa]:='@';
+                                encertsa++;
+                                jugadaa:=COMPROVA(matriujocbb, filaa, columnaa,caselles,  tira);
+                                si (jugadaa=3)
+                                    POSA_AIGUA(matriujocab, filaa, columnaa, caselles);
+                                fsi
+                                tira:=1;
+                            fsi
+                        sino
+                            jugadaa:=0;
+                        fsi
+                        puntuacioa:=puntuacioa+jugadaa-1;
+                        escriure("\n\nResultat: Jugador 1 casella '''':", filaa, columnaa+65);
+                        opció(jugadaa)
+                        valor  0:
+                            escriure(" Casella repetida. ");
+                            tira:=2;
+                        valor  1:
+                            escriure(" Aigua. ");
+                        valor  2:
+                            escriure(" Tocat. ");
+                        valor  3:
+                            escriure(" Tocat i enfonsat. ");
+                        fopcio
+                        si (encertsa=20)
+                            fi:=1;
+                        sino
+                            si ((jugadaa=2) o (jugadaa=3))
+                                escriure("Torna a tirar.");
+                            fsi
+                        fsi
+                        escapadatime llegirASCII
+                            si (escapadatime='\t')
+                                NETEJAR_PANTALLA
+                                goto menu;
+                            fsi
+                    fmentre
+                    mentre (((jugadab=2) o (jugadab=3) o (tira=2)) i (fi=0))
+                        jugadab:=DISPARA(matriujocaa, matriujocba,  filab,  columnab,  jugadab, caselles,  orientaciob,  verticalb,  horitzontalb, noacabatb);
+                        si (jugadab=3)
+                            POSA_AIGUA(matriujocba, filab, columnab, caselles);
+                        fsi
+                        llancamentsb++;
+                        NETEJAR_PANTALLA;
+                        VISUALITZA(matriujocaa, matriujocab, caselles, 1);
+                        escriure("\nTorn del jugador 2:");
+                        puntuaciob:=puntuaciob+jugadab-1;
+                        escriure("\n\nResultat: Jugador 2 casella '''':", filab, columnab+65);
+                        opció(jugadab)
+                        valor  1:
+                            escriure(" Aigua.");
+                            tira:=1;
+                        valor  2:
+                            escriure(" Tocat. ");
+                            encertsb++;
+                            si (encertsb<>20)
+                                escriure(" Torna a tirar");
+                            fsi
+                            noacabatb:=1;
+                            tira:=2;
+                        valor  3:
+                            escriure(" Tocat i enfonsat. ");
+                            encertsb++;
+                            si (encertsb<>20)
+                                escriure(" Torna a tirar.");
+                            fsi
+                            noacabatb:=0;
+                            tira:=2;
+			fopcio
+                        llegirASCII(escapadatime);
+                            si (escapadatime='\t')
+                                NETEJAR_PANTALLA
+                                goto menu;
+                            fsi
+                        si (encertsb=20)
+                                fi:=1;
+                            fsi
+                        fmentre
+                    fmentre
+                    puntuacioa:=CALCULAPUNTUACIO(caselles, puntuacioa, llancamentsa);
+                    puntuaciob:=CALCULAPUNTUACIO(caselles, puntuaciob, llancamentsb);
+                    si (encertsa=20)
+                        escriure("\nHa guanyat el jugador 1, amb '' punts, felicitats!\n", puntuacioa);
+                    fsi
+                    si (encertsb=20)
+                        escriure("\nHa guanyat el jugador 2, amb '' punts, felicitats!\n", puntuaciob);
+                    fsi
+                    getch();
+                    si (0=AFEGIR_RECORD(puntuacioa, taula, 1)) escriure("El teu record no s'ha afegit...\n");fsi
+                    si (0=AFEGIR_RECORD(puntuaciob, taula, 2)) escriure("El teu record no s'ha afegit...\n");fsi
+                    EMMAGATZEMA_RECORDS(taula);
+                    IMPRIMIR_RECORDS(taula);
+                     fi:=0;
+                    noacabata:=0;
+                    noacabatb:=0;
+                    encertsa:=0;
+                    encertsb:=0;
+                    jugadaa:=1;
+                    jugadab:=1;
+                    orientacioa:=-1;
+                    orientaciob:=-1;
+                    horitzontala:=-1;
+                    horitzontalb:=-1;
+                    verticala:=-1;
+                    verticalb:=-1;
+                    puntuacioa:=0;
+                    puntuaciob:=0;
+                    llancamentsa:=0;
+                    llancamentsb:=0;
+                    load:=0;
+                    monflag:=1;
+                    opciotauler:=-1;
+                    PAUSA;
+		fopcio
+    valor  4:
+        dades.opcio:=opcio;
+        dades.caselles:=caselles;
+        i:=0;
+        j:=0;
+        mentre (i<10)
+            mentre (j<10)
+                dades.matriujocaa[i][j]:=matriujocaa[i][j];
+                j++;
+            fmentre 
+            j:=0;
+            i++;
+        fmentre
+        i:=0;
+        mentre (i<10)
+            mentre (j<10)
+                dades.matriujocab[i][j]:=matriujocab[i][j];
+                j++;
+            fmentre
+            j:=0;
+            i++;
+        fmentre
+        i:=0;
+        mentre (i<10)
+            mentre (j<10)
+                dades.matriujocbb[i][j]:=matriujocbb[i][j];
+                j++;
+            fmentre
+            j:=0;
+            i++;
+        fmentre
+        i:=0;
+        mentre (i<10)
+            mentre (j<10)
+                dades.matriujocba[i][j]:=matriujocba[i][j];
+                j++;
+            fmentre
+            j:=0;
+            i++;
+        fmentre
+        dades.noacabata:=noacabata;
+        dades.noacabatb:=noacabatb;
+        dades.puntuacioa:=puntuacioa;
+        dades.puntuaciob:=puntuaciob;
+        dades.llancamentsa:=llancamentsa;
+        dades.llancamentsb:=llancamentsb;
+        dades.tira:=tira;
+        dades.encertsa:=encertsa;
+        dades.encertsb:=encertsb;
+        dades.filaa:=filaa;
+        dades.filab:=filab;
+        dades.columnaa:=columnaa;
+        dades.columnab:=columnab;
+        dades.jugadaa:=jugadaa;
+        dades.jugadab:=jugadab;
+        dades.orientacioa:=orientacioa;
+        dades.orientaciob:=orientaciob;
+        dades.verticala:=verticala;
+        dades.verticalb:=verticalb;
+        dades.horitzontala:=horitzontala;
+        dades.horitzontalb:=horitzontalb;
+        dades.monflag:=monflag;
+        si (0=EMMAGATZEMA_JOC(dades))
+            escriure("No s'ha guardat cap joc...");
+        sino
+            escriure("El teu  joc s'ha guardat correctament");
+        fsi
+    valor  5:
+        IMPRIMIR_RECORDS(taula);
+    valor  6:
+        falgorisme;
+    valor  7:
+        NETEJAR_PANTALLA
+        escriure(" o       o           _____                            __________        o  o    \n");
+        escriure(" o       o          /     \\         o                 o            o      o  o    \n");
+        escriure(" o       o         /       \\        o                 o            o       o  o    \n");
+        escriure(" o       o        /         \\       o                 o            o      o  o    \n");
+        escriure(" o       o       /           \\      o                 o            o       o  o    \n");
+        escriure(" o ----- o      |             |     o                 o ---------- o      o  o   \n");
+        escriure(" o       o       \\           /      o                 o            o       o  o    \n");
+        escriure(" o       o        \\         /       o                 o            o            \n");
+        escriure(" o       o         \\       /        o                 o            o        \n");
+        escriure(" o       o          \\_____/         _____________    o            o         \n");
+        escriure(" \n");
+        escriure("                      _____   ______  __     ____   ___      ____     __ \n");
+        escriure("       o   o       o   //        o     |  o  \\   o     |  o    \\    o        /    \n");
+        escriure("       o   o       o   o          o     |  o   |  o     |  o     o    o       |    \n");
+        escriure("  o     o   o       o   o  _____   o ____|  o   |  o     |  o ___/    o =:=    \\   \n");
+        escriure("  \\   //  o       o   \\      o   o     |  o  /   o     |  o    \\    o         | \n");
+        escriure("   \\__//  \\____//    \\___//   o     |  o /    o ____|  o     \\   o ____  __/    \n");
+        escriure("\nAquest joc es el joc hundir la flota en versio 3.0");
+        escriure("\nPer a comencar escolleix la opcio carregar una partida o crear un nou joc");
+        escriure("\nAixo carregara una partida guardada (si n'hi ha una) o be creara un nou joc. ");
+        escriure("\n");
+        escriure("\nHi ha tres tipus de joc: cap jugador, on nomes juga la maquina. Un jugador,");
+        escriure("\non nomes jugues tu per a enfonsar tots els vaixells del contrincant i la maquina");
+        escriure("es completament passiva. I per ultim esta la opcio de jugar tu contra la maquina");
+        escriure("que jo he dissenyat per a que perdis un cop rere un altre muahahahaha. Aquesta  ");
+        escriure("es l'opcio mes divertida.");
+        escriure("A l' opcio de dos jugadors es troba de forma exclusiva\nl'opcio de dissenyar el");
+        escriure(" teu propi tauler de joc.");
+        escriure("\n");
+        escriure("\nEl joc esta dissenyat per obtenir informacio de lusuari capturant les pulsacions");
+        escriure("del teclat, de manera que un cop hagis apretat una tecla no hi haura opcio per a");
+        escriure("tornar enrere; procura no equivocarte ;). Les opcions possibles a triar solen ");
+        escriure("\nestar escrites al mateix enunciat de la pregunta indicades entre parentesi,");
+        escriure("\no be davant de l'opcio amb un numero, per exemple: 3.-carregar partida, ");
+        escriure("\nes a dir, que per a seleccionar aquella opcio has de premer 3. De vegades pero,");
+        escriure("\nsi la pantalla es queda quieta; el joc espera que premis qualsevol tecla per a");
+        escriure("\npoder continuar.");
+        escriure("\n");
+        escriure("\nEl joc esta fet a prova de poca-soltes que intenten rebentar el codi o be a ");
+        escriure("\nprova d'australopitecs que no son capacos d'introduir l'informacio que el joc   ");
+        escriure("els hi esta demanant. Pots equivocarte sense problema,pero procura no tocar molt");
+        escriure("els pebrots o potser sere jo qui et faci una visita per a aixafarte la guitarra ");
+        escriure("poca-solta.");
+        escriure("\n");
+        escriure("\nEs pot sortir d'una partida per a tornar al menu en el moment que s'anuncia el");
+        escriure("\nresultat de la jugada (jugador 1: aigua) prement la tecla tabulador; en la ");
+        escriure("\nmajoria de teclats es troba sobre el bloc de majuscules (bloq mayus). Aixo pot ");
+        escriure("\nfer-se per a guardar la partida, per exemple.");
+        escriure("\n\nAu va!! prou d'instruccions i a enfonsar vaixells, que jugar a aquesta andromina");
+        escriure("es bufar i fer ampolles!!");
+        escriure("\n");
+        escriure("\nmolta sort!!! :D\n");
+fopcio
+        escriure("\nPrem qualsevol tecla per a tornar al menu principal \n");
+        getch();
+        NETEJAR_PANTALLA
+fmentre
+falgorisme
